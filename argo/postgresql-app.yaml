@@ -1,0 +1,24 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: postgresql
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/haiminhnguyenn/kong-helm-chart.git 
+    path: charts/postgresql
+    targetRevision: main  
+    helm:
+      valueFiles:
+      - ./values.yaml
+      parameters:
+      - name: auth.postgresPassword
+        value: demo123
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: kong
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true

@@ -93,11 +93,12 @@ deployment:
 env:
   # Database
   role: traditional
-  database: "postgres" 
-  pg_host: "kong-postgres"  
-  pg_user: "kong"
-  pg_password: "postgres_password"
-  pg_database: "kong" 
+  database: postgres
+  pg_database: kong
+  pg_user: kong
+  pg_password: demo123
+  pg_host: kong-cp-postgresql.kong.svc.cluster.local 
+  pg_ssl: "on"
    
   # Kong Manager password
   password: kong_admin_password
@@ -730,12 +731,8 @@ ingressController:
 
 postgresql:
   enabled: true
-  postgresqlUsername: kong
-  postgresqlPassword: "postgres_password"
-  postgresqlDatabase: kong
-  service:
-    ports:
-      postgresql: 5432
+  auth:
+    password: demo123
 
 # -----------------------------------------------------------------------------
 # Configure cert-manager integration

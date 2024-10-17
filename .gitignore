@@ -1,3 +1,0 @@
-# Ignore TLS certificate and private key files
-tls.crt
-tls.key

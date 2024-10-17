@@ -734,10 +734,17 @@ ingressController:
 # https://github.com/Kong/charts/blob/main/charts/kong/FAQs.md#kong-fails-to-start-after-helm-upgrade-when-postgres-is-used-what-do-i-do
 
 postgresql:
-  enabled: true  # Kích hoạt PostgreSQL nội bộ trong K8S
+  enabled: true
   postgresqlUsername: kong
-  postgresqlPassword: kong-postgres-secret-password
+  postgresqlPassword:
+    valueFrom:
+      secretKeyRef:
+        name: kong-postgres-secret
+        key: postgres-password
   postgresqlDatabase: kong
+  service:
+    ports:
+      postgresql: 5432
 
 # -----------------------------------------------------------------------------
 # Configure cert-manager integration

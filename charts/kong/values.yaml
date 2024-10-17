@@ -96,11 +96,7 @@ env:
   database: "postgres" 
   pg_host: "kong-postgres"  
   pg_user: "kong"
-  pg_password:
-    valueFrom:
-      secretKeyRef:
-        name: kong-postgres-secret
-        key: postgres-password
+  pg_password: "postgres_password"
   pg_database: "kong" 
    
   # Kong Manager password
@@ -735,11 +731,7 @@ ingressController:
 postgresql:
   enabled: true
   postgresqlUsername: kong
-  postgresqlPassword:
-    valueFrom:
-      secretKeyRef:
-        name: kong-postgres-secret
-        key: postgres-password
+  postgresqlPassword: "postgres_password"
   postgresqlDatabase: kong
   service:
     ports:

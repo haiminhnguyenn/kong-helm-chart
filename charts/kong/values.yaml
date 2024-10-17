@@ -91,7 +91,21 @@ deployment:
 # e.g. setting pg_user here will override the value normally set when postgresql.enabled
 # is set below. In general, you should not set values here if they are set elsewhere.
 env:
-  database: "off"
+  # Database
+  role: traditional
+  database: "postgres" 
+  pg_host: "kong-postgres"  
+  pg_user: "kong"
+  pg_password:
+    valueFrom:
+      secretKeyRef:
+        name: kong-postgres-secret
+        key: postgres-password
+  pg_database: "kong" 
+   
+  # Kong Manager password
+  password: kong_admin_password
+
   # the chart uses the traditional router (for Kong 3.x+) because the ingress
   # controller generates traditional routes. if you do not use the controller,
   # you may set this to "traditional_compatible" or "expressions" to use the new
@@ -132,11 +146,9 @@ extraLabels: {}
 
 # Specify Kong's Docker image and repository details here
 image:
-  repository: kong
-  tag: "3.7"
   # Kong Enterprise
-  # repository: kong/kong-gateway
-  # tag: "3.7"
+  repository: kong/kong-gateway
+  tag: "3.7"
 
   # Specify a semver version if your image tag is not one (e.g. "nightly")
   effectiveSemver:
@@ -244,7 +256,7 @@ clusterCaSecretName: ""
 # LoadBalancer" and use a TCP-only load balancer (check your Kubernetes
 # provider's documentation, as the configuration required for this varies).
 cluster:
-  enabled: false
+  enabled: true
   # To specify annotations or labels for the cluster service, add them to the respective
   # "annotations" or "labels" dictionaries below.
   annotations: {}
@@ -252,7 +264,7 @@ cluster:
   labels: {}
 
   tls:
-    enabled: false
+    enabled: true
     servicePort: 8005
     containerPort: 8005
     parameters: []
@@ -532,7 +544,7 @@ dblessConfig:
 # created in k8s. It uses CRDs for more fine grained control over routing and
 # for Kong specific configuration.
 ingressController:
-  enabled: true
+  enabled: false
   image:
     repository: kong/kubernetes-ingress-controller
     tag: "3.3"
@@ -722,17 +734,10 @@ ingressController:
 # https://github.com/Kong/charts/blob/main/charts/kong/FAQs.md#kong-fails-to-start-after-helm-upgrade-when-postgres-is-used-what-do-i-do
 
 postgresql:
-  enabled: false
-  auth:
-    username: kong
-    database: kong
-  image:
-    # use postgres < 14 until is https://github.com/Kong/kong/issues/8533 resolved and released
-    # enterprise (kong-gateway) supports postgres 14
-    tag: 13.11.0-debian-11-r20
-  service:
-    ports:
-      postgresql: "5432"
+  enabled: true  # Kích hoạt PostgreSQL nội bộ trong K8S
+  postgresqlUsername: kong
+  postgresqlPassword: kong-postgres-secret-password
+  postgresqlDatabase: kong
 
 # -----------------------------------------------------------------------------
 # Configure cert-manager integration
@@ -1029,12 +1034,12 @@ serviceMonitor:
 # RBAC and SMTP configuration have additional options that must all be set together
 # Other settings should be added to the "env" settings below
 enterprise:
-  enabled: false
+  enabled: true
   # Kong Enterprise license secret name
   # This secret must contain a single 'license' key, containing your base64-encoded license data
   # The license secret is required to unlock all Enterprise features. If you omit it,
   # Kong will run in free mode, with some Enterprise features disabled.
-  # license_secret: kong-enterprise-license
+  license_secret: kong-enterprise-license
   vitals:
     enabled: true
   portal:
@@ -1077,7 +1082,7 @@ enterprise:
 manager:
   # Enable creating a Kubernetes service for Kong Manager
   enabled: true
-  type: NodePort
+  type: LoadBalancer
   loadBalancerClass:
   # To specify annotations or labels for the Manager service, add them to the respective
   # "annotations" or "labels" dictionaries below.
@@ -1216,7 +1221,7 @@ portalapi:
     pathType: ImplementationSpecific
 
 clustertelemetry:
-  enabled: false
+  enabled: true
   # To specify annotations or labels for the cluster telemetry service, add them to the respective
   # "annotations" or "labels" dictionaries below.
   annotations: {}
@@ -1224,7 +1229,7 @@ clustertelemetry:
   labels: {}
 
   tls:
-    enabled: false
+    enabled: true
     servicePort: 8006
     containerPort: 8006
     parameters: []

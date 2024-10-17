@@ -95,10 +95,10 @@ env:
   role: traditional
   database: postgres
   pg_database: kong
-  pg_user: kong
-  pg_password: demo123
-  pg_host: kong-cp-postgresql.kong.svc.cluster.local 
-  pg_ssl: "on"
+  pg_user: postgres
+  pg_password: 26032003
+  pg_host: 10.240.226.8
+  pg_ssl: "off"
    
   # Kong Manager password
   password: kong_admin_password
@@ -730,9 +730,13 @@ ingressController:
 # https://github.com/Kong/charts/blob/main/charts/kong/FAQs.md#kong-fails-to-start-after-helm-upgrade-when-postgres-is-used-what-do-i-do
 
 postgresql:
-  enabled: true
-  auth:
-    password: demo123
+  enabled: false
+  postgresqlUsername: kong
+  postgresqlPassword: "postgres_password"
+  postgresqlDatabase: kong
+  service:
+    ports:
+      postgresql: 5432
 
 # -----------------------------------------------------------------------------
 # Configure cert-manager integration

@@ -256,7 +256,7 @@ clusterCaSecretName: ""
 # LoadBalancer" and use a TCP-only load balancer (check your Kubernetes
 # provider's documentation, as the configuration required for this varies).
 cluster:
-  enabled: true
+  enabled: false
   # To specify annotations or labels for the cluster service, add them to the respective
   # "annotations" or "labels" dictionaries below.
   annotations: {}
@@ -492,16 +492,15 @@ migrations:
   # where additional control is required around this job creation.
   jobAnnotations: {}
   # Optionally set a backoffLimit. If none is set, Jobs will use the cluster default
-  backoffLimit:
-  resources: {}
-  # Example reasonable setting for "resources":
-  # resources:
-  #   limits:
-  #     cpu: 100m
-  #     memory: 256Mi
-  #   requests:
-  #     cpu: 50m
-  #     memory: 128Mi
+  backoffLimit: 3
+  # resources: {}
+  resources:
+    limits:
+      cpu: 100m
+      memory: 256Mi
+    requests:
+      cpu: 50m
+      memory: 128Mi
   ## Optionally specify any extra sidecar containers to be included in the deployment
   ## See https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.18/#container-v1-core
   ## Keep in mind these containers should be terminated along with the main
@@ -1228,7 +1227,7 @@ portalapi:
     pathType: ImplementationSpecific
 
 clustertelemetry:
-  enabled: true
+  enabled: false
   # To specify annotations or labels for the cluster telemetry service, add them to the respective
   # "annotations" or "labels" dictionaries below.
   annotations: {}

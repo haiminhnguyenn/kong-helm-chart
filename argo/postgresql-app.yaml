@@ -11,7 +11,7 @@ spec:
     targetRevision: main  
     helm:
       valueFiles:
-      - values/postgresql-values.yaml
+      - ../../values/postgresql-values.yaml
   destination:
     server: https://kubernetes.default.svc
     namespace: kong

@@ -91,12 +91,7 @@ deployment:
 # e.g. setting pg_user here will override the value normally set when postgresql.enabled
 # is set below. In general, you should not set values here if they are set elsewhere.
 env:
-  database: "postgres"
-  pg_host: "postgresql.kong.svc.cluster.local"
-  pg_port: 5432
-  pg_user: "postgres"
-  pg_password: "demo123"  
-  pg_database: "postgres"
+  database: "off"
   # the chart uses the traditional router (for Kong 3.x+) because the ingress
   # controller generates traditional routes. if you do not use the controller,
   # you may set this to "traditional_compatible" or "expressions" to use the new
@@ -137,11 +132,11 @@ extraLabels: {}
 
 # Specify Kong's Docker image and repository details here
 image:
-  # repository: kong
-  # tag: "3.7"
-  # Kong Enterprise
-  repository: kong/kong-gateway
+  repository: kong
   tag: "3.7"
+  # Kong Enterprise
+  # repository: kong/kong-gateway
+  # tag: "3.7"
 
   # Specify a semver version if your image tag is not one (e.g. "nightly")
   effectiveSemver:
@@ -158,8 +153,8 @@ admin:
   # Enable creating a Kubernetes service for the admin API
   # Disabling this is recommended for most ingress controller configurations
   # Enterprise users that wish to use Kong Manager with the controller should enable this
-  enabled: true
-  type: LoadBalancer
+  enabled: false
+  type: NodePort
   loadBalancerClass:
   # To specify annotations or labels for the admin service, add them to the respective
   # "annotations" or "labels" dictionaries below.
@@ -170,7 +165,7 @@ admin:
   http:
     # Enable plaintext HTTP listen for the admin API
     # Disabling this and using a TLS listen only is recommended for most configuration
-    enabled: true
+    enabled: false
     servicePort: 8001
     containerPort: 8001
     # Set a nodePort which is available if service type is NodePort
@@ -1034,12 +1029,12 @@ serviceMonitor:
 # RBAC and SMTP configuration have additional options that must all be set together
 # Other settings should be added to the "env" settings below
 enterprise:
-  enabled: true
+  enabled: false
   # Kong Enterprise license secret name
   # This secret must contain a single 'license' key, containing your base64-encoded license data
   # The license secret is required to unlock all Enterprise features. If you omit it,
   # Kong will run in free mode, with some Enterprise features disabled.
-  license_secret: kong-enterprise-license
+  # license_secret: kong-enterprise-license
   vitals:
     enabled: true
   portal:
@@ -1082,7 +1077,7 @@ enterprise:
 manager:
   # Enable creating a Kubernetes service for Kong Manager
   enabled: true
-  type: LoadBalancer
+  type: NodePort
   loadBalancerClass:
   # To specify annotations or labels for the Manager service, add them to the respective
   # "annotations" or "labels" dictionaries below.

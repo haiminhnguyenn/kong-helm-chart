@@ -1,0 +1,63 @@
+env:
+  database: "postgres"
+  pg_host: "postgresql.kong.svc.cluster.local"
+  pg_port: 5432
+  pg_user: "postgres"
+  pg_password: "demo123"  
+  pg_database: "postgres"
+
+image:
+  repository: kong/kong-gateway
+  tag: "3.7"
+
+enterprise:
+  enabled: true
+  license_secret: kong-enterprise-license
+
+manager:
+  enabled: true
+  type: LoadBalancer
+
+  http:
+    # Enable plaintext HTTP listen for Kong Manager
+    enabled: true
+    servicePort: 8002
+    containerPort: 8002
+  
+  tls:
+    # Enable HTTPS listen for Kong Manager
+    enabled: true
+    servicePort: 8445
+    containerPort: 8445
+
+admin:
+  enabled: true
+  type: LoadBalancer
+
+  http:
+    # Enable plaintext HTTP listen for the admin API
+    enabled: true
+    servicePort: 8001
+    containerPort: 8001
+  
+  tls:
+    # Enable HTTPS listen for the admin API
+    enabled: true
+    servicePort: 8444
+    containerPort: 8444
+
+proxy:
+  enabled: true
+  type: LoadBalancer
+
+  http:
+    # Enable plaintext HTTP listen for the proxy
+    enabled: true
+    servicePort: 80
+    containerPort: 8000
+
+  tls:
+    # Enable HTTPS listen for the proxy
+    enabled: true
+    servicePort: 443
+    containerPort: 8443

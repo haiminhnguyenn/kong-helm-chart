@@ -11,10 +11,7 @@ spec:
     targetRevision: main  
     helm:
       valueFiles:
-      - ./values.yaml
-      parameters:
-      - name: auth.postgresPassword
-        value: demo123
+      - values/postgresql-values.yaml
   destination:
     server: https://kubernetes.default.svc
     namespace: kong
